@@ -1,0 +1,156 @@
+
+
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+* {
+/* With these codes padding and border does not increase it's width and gives intuitive style.*/
+
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+
+body {
+margin:0;
+padding:0;
+font-family: 'Roboto Slab', serif;
+}
+
+div#envelope{
+width: 65%;
+margin: 10px 10% 10px 16%;
+padding:10px 0;
+border: 2px solid gray;
+border-radius:10px;
+}
+
+form{
+width:70%;
+margin:4% 15%;
+}
+
+header{
+background-color: #4180C5;
+text-align: center;
+padding-top: 12px;
+padding-bottom: 8px;
+margin-top: -11px;
+margin-bottom: -8px;
+border-radius: 10px 10px 0 0;
+color: aliceblue;
+}
+
+/* Makes responsive fields. Sets size and field alignment.*/
+input[type=text],input[type=password]{
+margin-bottom: 20px;
+margin-top: 10px;
+width:75%;
+padding: 15px;
+border-radius:5px;
+border:1px solid #7ac9b7;
+}
+
+.title{
+ font-size:35px;
+ font-weight: bold;
+}
+
+select{
+ font-size:25px;
+ color: white;
+ height: 35px;
+ overflow: hidden;
+ border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+ background-color: #3b8ec2;
+ margin-top: 10px;
+ margin-bottom: 10px;   
+}
+
+input[type=submit]
+{
+margin-bottom: 20px;
+width:100%;
+padding: 15px;
+border-radius:5px;
+border:1px solid #7ac9b7;
+background-color: white;
+color: red;
+border-color: red;
+margin-top: 50px;
+font-size:35px;
+cursor:pointer;
+}
+
+.button-class{
+    background-color: white;
+    color: red;
+    border-radius:5px;
+    border:1px solid #7ac9b7;
+    border-color: red;
+    font-size:30px;
+}
+
+.button-class-link{
+    background-color: white;
+    color: purple;
+    border-color: blue;
+    border-radius:5px;
+    border:1px solid;
+    font-size:30px;
+}
+
+.button-class-add{
+    background-color: green;
+    color: white;
+    border-color: green;
+    border-radius:5px;
+    border:1px solid;
+    font-size:30px;
+}
+
+.button-class-remove{
+    background-color: red;
+    color: white;
+    border-color: red;
+    border-radius:5px;
+    border:1px solid;
+    font-size:30px;
+}
+
+
+.recording{
+font-size:40px;
+color: #000 !important;
+background-color: #ffeb3b !important;
+box-sizing: border-box;
+margin-bottom: 16px !important;
+box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12) !important;
+}
+
+#submit:hover
+{
+background-color: black;
+}
+.sub-title{
+font-size:25px;
+}
+
+textarea{
+width:100%;
+padding: 15px;
+margin-top: 10px;
+border:1px solid #7ac9b7;
+border-radius:5px;
+margin-bottom: 20px;
+resize:none;
+}
+
+input[type=text]:focus,textarea:focus,input[type=password] {
+border-color: #4697e4;
+font-size:25px;
+}
+
+

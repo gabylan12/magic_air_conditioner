@@ -1,0 +1,63 @@
+<ion-view view-title="Configure Commands">
+<form name="formConfigureCommands" ng-submit="confirm(configure,http)">
+  <ion-content>
+    <ion-list>
+  <ion-item>
+  <label class="item item-input item-select">
+    <div class="input-label" >
+      ON/OFF
+    </div>
+    <select ng-model="configure.onOff" id="onOff" name="onOff" data-ng-init="configure.onOff = 'ON'">
+      <option value="OFF">OFF</option>
+      <option   value="ON" >ON</option>
+    </select>
+  </label>
+  </ion-item>
+<ion-item>
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Mode
+    </div>
+    <select ng-model="configure.mode" id="mode" name="mode" data-ng-init="configure.mode = 'COLD'">
+      <option value="HEAT">Heat</option>
+      <option selected value="COLD"> Cold</option>
+    </select>
+  </label>
+  </ion-item>
+<ion-item>
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Temperature
+    </div>
+    <select ng-model="configure.temperature" id="temperature" name="temperature" data-ng-init="configure.temperature = '23'">
+      <option value="21">21</option>
+      <option value="22">22</option>
+      <option value="23"selected>23</option>
+      <option value="24">24</option>
+      <option value="25">25</option>
+    </select>
+  </label>
+  </ion-item>
+<ion-item>
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Functions
+    </div>
+    <select ng-model="configure.functions" id="functions" name="functions" data-ng-init="configure.functions = 'TURN'">
+      <option value="TURN" selected>Turn</option>
+      <option value="SWING" >Swing</option>
+      <option value="DISPLAY">Display</option>
+      <option value="TIMER">Timer</option>
+      <option value="SLEEP">Sleep</option>
+    </select>
+  </label>
+  </ion-item>
+  <ion-item>
+  <button class="button button-block button-positive" type="submit">
+	Confirm
+	</button>
+  </ion-item>
+</ion-list>
+  </ion-content>
+</form>
+</ion-view>

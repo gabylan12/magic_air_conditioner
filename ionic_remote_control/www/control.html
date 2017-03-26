@@ -1,0 +1,69 @@
+<ion-view view-title="Control">
+<form name="formExecuteCommands" ng-submit="confirm(configure,http)">
+  <ion-content>
+
+    <ion-list>
+	<ionic-item>Temperature - {{ temperature }} </ionic-item></br>
+        <ionic-item>Humidity - {{ humidity }}</ionic-item> 
+
+<ion-item>
+	<a class="button button-block button-positive" ng-click="turnOff()" 
+		href="#">
+	Turn Off
+	</a>
+  </ion-item>
+  <ion-item>
+  <div class="list">
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Mode
+    </div>
+    <select ng-model="configure.mode" id="mode" name="mode" data-ng-init="configure.mode = 'COLD'">
+      <option value="HEAT">Heat</option>
+      <option value="COLD" selected>Cold</option>
+    </select>
+  </label>
+  </div>
+  </ion-item>
+<ion-item>
+  <div class="list">
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Temperature
+    </div>
+    <select ng-model="configure.temperature" id="temperature" name="temperature" data-ng-init="configure.temperature = '23'">
+      <option value="21">21</option>
+      <option value="22">22</option>
+      <option value="23" selected>23</option>
+      <option value="24">24</option>
+      <option value="25">25</option>
+    </select>
+  </label>
+  </div>
+  </ion-item>
+  </ion-item>
+<ion-item>
+  <div class="list">
+  <label class="item item-input item-select">
+    <div class="input-label">
+      Functions
+    </div>
+    <select ng-model="configure.functions" id="functions" name="functions" data-ng-init="configure.functions = 'TURN'">
+      <option value="TURN" selected>Turn</option>
+      <option value="SWING">Swing</option>
+      <option value="DISPLAY">Display</option>
+      <option value="TIMER">Timer</option>
+      <option value="SLEEP">Sleep</option>
+    </select>
+  </label>
+  </div>
+  </ion-item>
+  <ion-item>
+  <button class="button button-block button-positive" type="submit" >
+	Send
+	</button>
+  </ion-item>
+</ion-list>
+  </ion-content>
+</form>
+</ion-view>
