@@ -7,7 +7,7 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 #include <ArduinoJson.h>
-#include "Bounce2.h"
+#include <IRremoteESP8266.h>
 #include "DHT.h"
 
 ESP8266WebServer server(80);
@@ -19,60 +19,52 @@ StaticJsonBuffer<200> jsonBuffer;
 JsonObject& jsonCommand = jsonBuffer.createObject();
 char toChar[2500];
 
-//RELAY
-#define LIGHT_LIVING_ROOM_PIN  13
-#define LIGHT_DINNING_ROOM_PIN  12
 
-int state_relay1 = LOW;       // estado actual del pin de salida 
-int state_relay2 = LOW;       // estado actual del pin de sali
-
-Bounce debouncer_relay1 = Bounce(); 
-Bounce debouncer_relay2 = Bounce();
-
+//IR
+int RECV_PIN = 0; //an IR detector/demodulatord is connected to GPIO pin 2
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+String irRecord = "";
+IRsend irsend(5); //an IR emitter led is connected to GPIO pin 4
 
 //DHT
 #define DHTPIN D1 
 //#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 DHT dht(DHTPIN, DHT22);
 
-void handleLight() {
-  digitalWrite(LED_BUILTIN, LOW);
-  
-
-  int number = server.arg("number").toInt();
-  boolean state  = server.arg("state").toInt();
-
-  switch(number){
-    case 1:{
-      digitalWrite(LIGHT_LIVING_ROOM_PIN,state);
-    }
-    break;
-    case 2:{
-      digitalWrite(LIGHT_DINNING_ROOM_PIN,state);
-    }
-  }
-
-  server.send(200, "text/html", state?"ON":"OFF");
-  delay(500);                    
-  digitalWrite(LED_BUILTIN, HIGH);
+/* Just a little test message.  Go to http://192.168.4.1 in a web browser
+ * connected to this access point to see it.
+ */
+void handleRoot() {
+  server.send(200, "text/html", "<h1>OK</h1>");
 }
+
 
 void handleSensors() {
   digitalWrite(LED_BUILTIN, LOW);
- 
+  command = "";
  jsonCommand["temperature"] = dht.readTemperature();
  jsonCommand["humidity"] = dht.readHumidity();
- jsonCommand["lightLivingRoom"] = digitalRead(LIGHT_LIVING_ROOM_PIN);
- jsonCommand["lightDinningRoom"] = digitalRead(LIGHT_DINNING_ROOM_PIN);
  jsonCommand.printTo(command);
  server.send(200, "text/html", command);
  delay(500);                    
  digitalWrite(LED_BUILTIN, HIGH);
 }
 
-void setLightValue(int pin,boolean turn){
-  digitalWrite(pin,turn);
+void handleRecord() {
+  digitalWrite(LED_BUILTIN, LOW);
+  
+  irRecord.toCharArray(toChar,2500);
+
+  jsonCommand["command"] = toChar;
+  command = "";
+  jsonCommand.printTo(command);
+  server.send(200, "text/html", command);
+  delay(500);                    
+  digitalWrite(LED_BUILTIN, HIGH);
 }
+
+
 
 void handleCommand() {
   digitalWrite(LED_BUILTIN, LOW); 
@@ -92,7 +84,9 @@ void handleCommand() {
     command = command.substring(command.indexOf(' ')+1);
   }
 
-
+  //send ir signal
+   irsend.sendRaw(rawbuf,k,38);
+  
   //response message
   jsonCommand["code"] = "OK";
   command = "";
@@ -126,7 +120,7 @@ void setup() {
   //if it does not connect it starts an access point with the specified name
   //here  "AutoConnectAP" with password "password"
   //and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect("LIVING")) {
+  if (!wifiManager.autoConnect("MAGIC AIR")) {
     Serial.println("failed to connect, we should reset as see if it connects");
     delay(3000);
     ESP.reset();
@@ -140,25 +134,53 @@ void setup() {
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
 
-  server.on("/light", handleLight);
+  server.on("/", handleRoot);
+  server.on("/record", handleRecord);
+  server.on("/command", handleCommand);
   server.on("/sensors", handleSensors);
-
 
   server.begin();
 
-  //RELAY
-  pinMode(LIGHT_LIVING_ROOM_PIN,  OUTPUT) ;
-  pinMode(LIGHT_DINNING_ROOM_PIN,  OUTPUT) ;
+  //IR
+  irrecv.enableIRIn(); // Start the receiver
+  irsend.begin();
 
+  
   //DHT
   dht.begin();
 
-  digitalWrite(LED_BUILTIN, HIGH);
+ digitalWrite(LED_BUILTIN, HIGH);
 
 
 }
 
+void decodeCommand(decode_results *results) {
+  // Dumps out the decode_results structure.
+  // Call this after IRrecv::decode()
+  int count = results->rawlen;
+  irRecord = "";
+  for (int i = 1; i < count; i++) {
+    irRecord += String((unsigned long) results->rawbuf[i]*USECPERTICK, DEC);
+    irRecord += " ";
+  }
+
+  Serial.println(irRecord);
+
+ 
+}
+
+void recordCommand(){
+  
+    if (irrecv.decode(&results)) {
+      digitalWrite(LED_BUILTIN, LOW);
+      decodeCommand(&results);
+      irrecv.resume(); // Receive the next value
+      digitalWrite(LED_BUILTIN, HIGH);
+  }
+  delay(100);
+}
 
 void loop() {
   server.handleClient();
+  recordCommand();
 }
