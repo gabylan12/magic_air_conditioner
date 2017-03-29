@@ -53,15 +53,6 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
 
-  .state('app.template-commands', {
-      url: '/template-commands',
-      views: {
-        'menuContent': {
-          templateUrl: 'template-commands.html'
-        }
-      }
-    })
-
   .state('app.control', {
       url: '/control',
       views: {
@@ -70,27 +61,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
           controller: 'ExecuteCommandsCtrl'
         }
       }
-    })
-
- /*   .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  })*/;
+    });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/control');
 });

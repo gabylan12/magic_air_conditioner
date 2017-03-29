@@ -5,23 +5,6 @@ angular.module('starter.controllers', [])
   // Form data for the login modal
   $scope.configureControl = {};
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
-
   $scope.configureControl.remoteHost = window.localStorage.getItem("remoteHost");
   $scope.configureControl.localHost = window.localStorage.getItem("localHost");
 
@@ -29,11 +12,6 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     window.localStorage.setItem("remoteHost", $scope.configureControl.remoteHost);
     window.localStorage.setItem("localHost", $scope.configureControl.localHost);
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
   };
 
 
@@ -62,7 +40,18 @@ angular.module('starter.controllers', [])
       window.localStorage.setItem(commandName, data.command);
     })
     .error(function(data, status, headers,config){
-      console.log('data error');
+		console.log('error local , trying remote');
+		 $http.get('http://'+window.localStorage.getItem("remoteHost")+'/record')
+		    .success(function(data, status, headers,config){
+		       $scope.result = data; // for UI
+     		       window.localStorage.setItem(commandName, data.command);
+		    })
+		    .error(function(data, status, headers,config){
+		      console.log('data error');
+		    })
+		    .then(function(result){
+		      things = result.data;
+		    });
     })
     .then(function(result){
       things = result.data;
@@ -84,7 +73,18 @@ angular.module('starter.controllers', [])
 		      console.log(data.code);
 		    })
 		    .error(function(data, status, headers,config){
-		      console.log('data error');
+		      console.log('error local , trying remote');
+		       $http.get("http://"+window.localStorage.getItem("remoteHost")+"/command?command="+command)	
+			    .success(function(data, status, headers,config){
+			       $scope.result = data; // for UI
+		     	       console.log(data.code);
+			    })
+			    .error(function(data, status, headers,config){
+			      console.log('data error');
+			    })
+			    .then(function(result){
+			      things = result.data;
+			    });
 		    })
 		    .then(function(result){
 		      things = result.data;
@@ -103,7 +103,18 @@ angular.module('starter.controllers', [])
 		      console.log(data.code);
 		    })
 		    .error(function(data, status, headers,config){
-		      console.log('data error');
+		      console.log('error local , trying remote');
+			$http.get("http://"+window.localStorage.getItem("remoteHost")+"/command?command="+command)
+			    .success(function(data, status, headers,config){
+			       $scope.result = data; // for UI
+		     	       console.log(data.code);
+			    })
+			    .error(function(data, status, headers,config){
+			      console.log('data error');
+			    })
+			    .then(function(result){
+			      things = result.data;
+			    });
 		    })
 		    .then(function(result){
 		      things = result.data;
@@ -118,11 +129,23 @@ angular.module('starter.controllers', [])
 	  $http.get('http://'+window.localStorage.getItem("localHost")+'/sensors')
 	    .success(function(data, status, headers,config){
 	      $scope.result = data; // for UI
-	      $scope.temperature = data.temperature;
-	      $scope.humidity = data.humidity;
+	      $scope.temperature = data.temperature + "°C";
+	      $scope.humidity = data.humidity + "%";
 	    })
 	    .error(function(data, status, headers,config){
-	      console.log('data error');
+	      console.log('error local , trying remote');
+	      $http.get('http://'+window.localStorage.getItem("remoteHost")+'/sensors')
+		    .success(function(data, status, headers,config){
+		      $scope.result = data; // for UI
+		      $scope.temperature = data.temperature + "°C";
+		      $scope.humidity = data.humidity + "%";
+		    })
+		    .error(function(data, status, headers,config){
+		      console.log('data error');
+		    })
+		    .then(function(result){
+		      things = result.data;
+		    });
 	    })
 	    .then(function(result){
 	      things = result.data;
